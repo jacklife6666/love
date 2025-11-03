@@ -1,0 +1,15 @@
+# Java & Maven
+/Love/target/
+/Love/.idea/
+*.log
+
+# Node.js & Vue
+/lovevue/node_modules/
+/lovevue/dist/
+/lovevue/vite-project/node_modules/
+/lovevue/vite-project/dist/
+.DS_Store
+
+# IDE
+.vscode/
+*.iml

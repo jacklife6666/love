@@ -1,0 +1,25 @@
+{
+  "name": "vite-project",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@stomp/stompjs": "^7.0.0",
+    "axios": "^1.7.2",
+    "element-plus": "^2.8.1",
+    "jwt-decode": "^4.0.0",
+    "sockjs-client": "^1.6.1",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.2"
+  },
+  "devDependencies": {
+    "@types/sockjs-client": "^1.5.4",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.2.8"
+  }
+}

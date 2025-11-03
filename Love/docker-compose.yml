@@ -1,0 +1,62 @@
+# Docker Compose 文件的版本
+version: '3.8'
+
+# 定义我们所有的服务
+services:
+
+  # 1. 前端服务 (Nginx)
+  frontend:
+    # 【核心修改】告诉 Docker，前端的 "建造蓝图" 在上一层(..)的 'lovevue' 文件夹里
+    build:
+      context: ../lovevue
+      dockerfile: Dockerfile
+    image: love-frontend:latest  # 名字不变
+    ports:
+      - "80:80"                  # 映射您电脑的 80 端口到容器的 80 端口
+    restart: always
+    depends_on:                  # 确保后端启动后, 前端再启动
+      - backend
+
+  # 2. 后端服务 (Spring Boot)
+  backend:
+    # 【核心修改】告诉 Docker，后端的 "建造蓝图" 就在当前文件夹 (.)
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: love-backend:latest   # 名字不变
+    ports:
+      - "8081:8081"              # 映射您电脑的 8081 端口
+    restart: always
+    depends_on:                  # 确保数据库和Redis先启动
+      - mysql-db
+      - redis-cache
+    environment:                 # 【重要】让后端连接到其他“容器名”
+      - SERVER_PORT=8081
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/dating_app?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456
+      - SPRING_REDIS_HOST=redis-cache
+      - SPRING_REDIS_PORT=6379
+
+  # 3. 数据库服务 (MySQL)
+  mysql-db:
+    image: mysql:8.0             # 使用官方的 MySQL 8.0 镜像
+    ports:
+      - "3307:3306"              # 映射端口, 方便本地调试
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=dating_app  # 启动时自动创建名为 'dating_app' 的数据库
+    volumes:
+      - mysql-data:/var/lib/mysql  # 将数据库数据持久化
+    restart: always
+
+  # 4. 缓存服务 (Redis)
+  redis-cache:
+    image: redis:latest          # 使用官方的 Redis 镜像
+    ports:
+      - "6379:6379"              # 映射端口, 方便本地调试
+    restart: always
+
+# 定义一个具名卷，用于持久化存储 MySQL 数据
+volumes:
+  mysql-data:

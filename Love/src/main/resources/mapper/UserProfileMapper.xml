@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.love.datingapp.mapper.UserProfileMapper">
+
+    <select id="findByUserId" resultType="com.love.datingapp.entity.UserProfile">
+        SELECT user_id, nickname, avatar, gender, birthdate, city, height, education, occupation, introduction, update_time
+        FROM t_user_profile
+        WHERE user_id = #{userId}
+    </select>
+
+    <insert id="save">
+        INSERT INTO t_user_profile (user_id, nickname, avatar, gender, birthdate, city, height, education, occupation, introduction, update_time)
+        VALUES (#{userId}, #{nickname}, #{avatar}, #{gender}, #{birthdate}, #{city}, #{height}, #{education}, #{occupation}, #{introduction}, NOW())
+    </insert>
+
+    <update id="update">
+        UPDATE t_user_profile
+        <set>
+            <if test="avatar != null">avatar = #{avatar},</if>
+
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="birthdate != null">birthdate = #{birthdate},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="height != null">height = #{height},</if>
+            <if test="education != null">education = #{education},</if>
+            <if test="occupation != null">occupation = #{occupation},</if>
+            <if test="introduction != null">introduction = #{introduction},</if>
+            update_time = NOW()
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>

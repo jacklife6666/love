@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.love.datingapp.mapper.UserMapper">
+
+    <select id="findByPhone" resultType="com.love.datingapp.entity.User">
+        SELECT id, phone, password, status, create_time, update_time, role
+        FROM t_user
+        WHERE phone = #{phone}
+    </select>
+
+    <select id="findById" resultType="com.love.datingapp.entity.User">
+        SELECT id, phone, password, status, create_time, update_time, role
+        FROM t_user
+        WHERE id = #{id}
+    </select>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_user (phone, password, status)
+        VALUES (#{phone}, #{password}, 1)
+    </insert>
+
+    <select id="findRecommendations" resultType="com.love.datingapp.entity.UserProfile">
+        SELECT
+            p.*
+        FROM
+            t_user_profile p
+        WHERE
+            p.user_id != #{currentUserId}
+        ORDER BY
+            p.update_time DESC
+            LIMIT #{candidateLimit}
+    </select>
+
+    <select id="findAllUsers" resultType="com.love.datingapp.common.dto.UserVO">
+        SELECT id, phone, role, status, create_time, password FROM t_user ORDER BY id
+    </select>
+
+</mapper>
